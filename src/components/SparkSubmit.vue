@@ -4,7 +4,7 @@
         <h3>Spark job configurator</h3>
         <p>
           Find the best configuration to deploy your Spark application in YARN in cluster-mode.
-          This project is based on <a href="">Anthony Shipman</a>'s article which I give my thanks.
+          This project is based on <a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">Anthony Shipman</a>'s article which I give my thanks.
         </p>
         </div>
         <div class="container">
