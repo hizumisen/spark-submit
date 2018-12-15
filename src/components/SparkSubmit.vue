@@ -1,87 +1,84 @@
 <template>
-    <div>
-        <div class="container">
+    <div class="container">
+        <div>
         <h3>Spark job configurator</h3>
         <p>
           Find the best configuration to deploy your Spark application in YARN in cluster-mode.
           This project is based on <a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">Anthony Shipman</a>'s article which I give my thanks.
         </p>
         </div>
-        <div class="container">
-          <div class="row">
-            <form class="col-sm">
-                <h5>Cluster</h5>
-                <v-cluster v-model="cluster"/>
-                <h5>Executors</h5>
-                <div class="form-group row">
-                  <label class="col-sm-8 col-form-label col-form-label-sm">Executors Per Node</label>
-                  <div class="col-sm-4">
-                    <input v-model="config.executorsPerNode" class="form-control form-control-sm" type="number" min = 1 step = 1>
+        <div class="row">
+          <form class="col-sm">
+              <h5>Cluster</h5>
+              <v-cluster v-model="cluster"/>
+              <h5>Executors</h5>
+              <div class="form-group row">
+                <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Executors Per Node</label>
+                <div class="col-xs-12 col-sm-12 col-lg-5">
+                  <input v-model="config.executorsPerNode" class="form-control form-control-sm" type="number" min = 1 step = 1>
+                </div>
+              </div>
+          </form>
+          <form class="col-sm">
+              <h5>Change with care</h5>
+              <div class="form-group row">
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Memory Overhead Coefficient</label>
+                  <div class="col-xs-12 col-sm-12 col-lg-5">
+                      <input v-model="config.memoryOverheadCoefficient" class="form-control form-control-sm" type="number" min=0>
                   </div>
-                </div>
-            </form>
-            <form class="col-sm">
-                <h5>Change with care</h5>
-                <div class="form-group row">
-                    <label class="col-sm-8 col-form-label col-form-label-sm">Memory Overhead Coefficient</label>
-                    <div class="col-sm-4">
-                        <input v-model="config.memoryOverheadCoefficient" class="form-control form-control-sm" type="number" min=0>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-8 col-form-label col-form-label-sm">Executor Memory Upper Bound (GB)</label>
-                    <div class="col-sm-4">
-                        <input v-model="config.executorMemoryUpperBoundGB" class="form-control form-control-sm" type="number" min=0>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-8 col-form-label col-form-label-sm">Executor Core Upper Bound</label>
-                    <div class="col-sm-4">
-                        <input v-model="config.executorCoreUpperBound" class="form-control form-control-sm" type="number" min=0>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-8 col-form-label col-form-label-sm">OS Reserved Cores</label>
-                    <div class="col-sm-4">
-                        <input v-model="config.osReservedCores" class="form-control form-control-sm" type="number" min=0>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-8 col-form-label col-form-label-sm">OS Reserved Memory (GB)</label>
-                    <div class="col-sm-4">
-                        <input v-model="config.osReservedMemoryGB" class="form-control form-control-sm" type="number" min=0>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-8 col-form-label col-form-label-sm">Parallelism Per Core</label>
-                    <div class="col-sm-4">
-                        <input v-model="config.parallelismPerCore" class="form-control form-control-sm" type="number" min=0>
-                    </div>
-                </div>
-            </form>
-          </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Executor Memory Upper Bound (GB)</label>
+                  <div class="col-xs-12 col-sm-12 col-lg-5">
+                      <input v-model="config.executorMemoryUpperBoundGB" class="form-control form-control-sm" type="number" min=0>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Executor Core Upper Bound</label>
+                  <div class="col-xs-12 col-sm-12 col-lg-5">
+                      <input v-model="config.executorCoreUpperBound" class="form-control form-control-sm" type="number" min=0>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">OS Reserved Cores</label>
+                  <div class="col-xs-12 col-sm-12 col-lg-5">
+                      <input v-model="config.osReservedCores" class="form-control form-control-sm" type="number" min=0>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">OS Reserved Memory (GB)</label>
+                  <div class="col-xs-12 col-sm-12 col-lg-5">
+                      <input v-model="config.osReservedMemoryGB" class="form-control form-control-sm" type="number" min=0>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Parallelism Per Core</label>
+                  <div class="col-xs-12 col-sm-12 col-lg-5">
+                      <input v-model="config.parallelismPerCore" class="form-control form-control-sm" type="number" min=0>
+                  </div>
+              </div>
+          </form>
         </div>
-        <hr class="style1"/>
-        <div class="container">
-          <div class="row">
-          <div class="col-sm">
-            <h5>Spark configuration </h5>
-            <table class="table table-sm">
-              <tbody>
-                <tr><td>spark.executor.instances</td><td>{{spark.executorInstances}}</td></tr>
-                <tr><td>spark.yarn.executor.memoryOverhead </td><td>{{spark.yarnExecutorMemoryOverhead}}</td></tr>
-                <tr><td>spark.executor.memory</td><td>{{spark.executorMemory}}</td></tr>
-                <tr><td>spark.yarn.driver.memoryOverhead </td><td>{{spark.yarnDriverMemoryOverhead}}</td></tr>
-                <tr><td>spark.driver.memory</td><td>{{spark.driverMemory}}</td></tr>
-                <tr><td>spark.executor.cores</td><td>{{spark.executorCores}}</td></tr>
-                <tr><td>spark.driver.cores</td><td>{{spark.driverCores}}</td></tr>
-                <tr><td>spark.default.parallelism</td><td>{{spark.defaultParallelism}}</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-sm">
-            <h5>Spark submit </h5>
-               <pre><code>
+        <hr/>
+        <div class="row">
+        <div class="col-sm">
+          <h5>Spark configuration </h5>
+          <table class="table table-sm">
+            <tbody>
+              <tr><td>spark.executor.instances</td><td>{{spark.executorInstances}}</td></tr>
+              <tr><td>spark.yarn.executor.memoryOverhead </td><td>{{spark.yarnExecutorMemoryOverhead}}</td></tr>
+              <tr><td>spark.executor.memory</td><td>{{spark.executorMemory}}</td></tr>
+              <tr><td>spark.yarn.driver.memoryOverhead </td><td>{{spark.yarnDriverMemoryOverhead}}</td></tr>
+              <tr><td>spark.driver.memory</td><td>{{spark.driverMemory}}</td></tr>
+              <tr><td>spark.executor.cores</td><td>{{spark.executorCores}}</td></tr>
+              <tr><td>spark.driver.cores</td><td>{{spark.driverCores}}</td></tr>
+              <tr><td>spark.default.parallelism</td><td>{{spark.defaultParallelism}}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm">
+          <h5>Spark submit </h5>
+             <pre><code>
 spark-submit \
     --&lt;your class&gt; \
     --spark.executor.instances {{spark.executorInstances}} \
@@ -93,17 +90,16 @@ spark-submit \
     --spark.driver.cores {{spark.driverCores}} \
     --spark.default.parallelism {{spark.defaultParallelism}} \
     &lt;your jar&gt;
-               </code></pre>
-          </div>
+             </code></pre>
         </div>
-        </div>
-        <div class="container">
-          <h5>External references</h5>
-          <ul>
-              <li><a target="_blank" href="https://spark.apache.org/docs/latest/running-on-yarn.html">https://spark.apache.org/docs/latest/running-on-yarn.html</a></li>
-              <li><a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet</a></li>
-          </ul>
-        </div>
+      </div>
+      <div>
+        <h5>External references</h5>
+        <ul>
+            <li><a target="_blank" href="https://spark.apache.org/docs/latest/running-on-yarn.html">https://spark.apache.org/docs/latest/running-on-yarn.html</a></li>
+            <li><a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet</a></li>
+        </ul>
+      </div>
     </div>
 </template>
 
@@ -113,7 +109,7 @@ export default {
   data () {
     return {
       cluster: {
-        tabIndex: 1,
+        tabIndex: 0,
         nodes: 30,
         nodeMemory: 60,
         nodeCores: 8,

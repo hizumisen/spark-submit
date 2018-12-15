@@ -20,34 +20,34 @@
     <b-tabs v-model="value.tabIndex">
         <b-tab title="Custom">
             <div class="form-group row">
-                <label class="col-sm-8 col-form-label col-form-label-sm">Number of Nodes</label>
-                   <div class="col-sm-4">
+                <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Number of Nodes</label>
+                   <div class="col-xs-12 col-sm-12 col-lg-5">
                        <input v-model="value.nodes" class="form-control form-control-sm" type="number" min = 1 step = 1>
                     </div>
                </div>
                <div class="form-group row">
-                <label class="col-sm-8 col-form-label col-form-label-sm">Memory Per Node (GB)</label>
-                   <div class="col-sm-4">
+                <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Memory Per Node (GB)</label>
+                   <div class="col-xs-12 col-sm-12 col-lg-5">
                        <input v-model="value.nodeMemory" class="form-control form-control-sm" type="number" min = 1 step = 1>
                     </div>
                </div>
                <div class="form-group row">
-                <label class="col-sm-8 col-form-label col-form-label-sm">Cores Per Node</label>
-                   <div class="col-sm-4">
+                <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Cores Per Node</label>
+                   <div class="col-xs-12 col-sm-12 col-lg-5">
                        <input v-model="value.nodeCores" class="form-control form-control-sm" type="number" min = 1 step = 1>
                     </div>
                </div>
         </b-tab>
         <b-tab title="AWS EMR" >
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label col-form-label-sm">Number of Nodes</label>
-              <div class="col-sm-4">
+              <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Number of Nodes</label>
+              <div class="col-xs-12 col-sm-12 col-lg-5">
                 <input v-model="value.nodes" class="form-control form-control-sm" type="number" min = 1 step = 1>
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label col-form-label-sm">Instance type</label>
-                 <div class="col-sm-4">
+              <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Instance type</label>
+                 <div class="col-xs-12 col-sm-12 col-lg-5">
                      <v-select class="form-control-sm" v-model="value.ec2" :options="Object.keys($store.state.emr)" ></v-select>
                   </div>
              </div>
