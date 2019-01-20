@@ -1,9 +1,9 @@
 <template>
     <div class="container">
         <div>
-        <h3>Spark job configurator</h3>
+        <h1>Spark job configurator</h1>
         <p>
-          Find the best configuration to deploy your Spark application in YARN in cluster-mode.
+          Find the best configuration to deploy your Spark applications in YARN in cluster-mode.
           This project is based on <a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">Anthony Shipman</a>'s article which I give my thanks.
         </p>
         </div>
@@ -13,7 +13,10 @@
               <v-cluster v-model="cluster"/>
               <h5>Executors</h5>
               <div class="form-group row">
-                <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Executors Per Node</label>
+                <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                  <font-awesome-icon icon="question-circle" v-b-popover.hover="'The number of spark executor to run in each node of the cluster.'""/>
+                  Executors Per Node
+                </label>
                 <div class="col-xs-12 col-sm-12 col-lg-5">
                   <input v-model="config.executorsPerNode" class="form-control form-control-sm" type="number" min = 1 step = 1>
                 </div>
@@ -22,37 +25,55 @@
           <form class="col-sm">
               <h5>Change with care</h5>
               <div class="form-group row">
-                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Memory Overhead Coefficient</label>
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                    <font-awesome-icon icon="question-circle" v-b-popover.hover="'The percentage of memory off-heap memory to be allocated per executor.'""/>
+                    Memory Overhead Coefficient
+                  </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.memoryOverheadCoefficient" class="form-control form-control-sm" type="number" min=0>
+                      <input v-model="config.memoryOverheadCoefficient" class="form-control form-control-sm" type="number" min=0 max=1 step=0.01>
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Executor Memory Upper Bound (GB)</label>
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                    <font-awesome-icon icon="question-circle" v-b-popover.hover="'The maximum amount of memory an executor can use.'""/>
+                    Executor Memory Upper Bound (GB)
+                  </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
                       <input v-model="config.executorMemoryUpperBoundGB" class="form-control form-control-sm" type="number" min=0>
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Executor Core Upper Bound</label>
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                    <font-awesome-icon icon="question-circle" v-b-popover.hover="'The maximum amount of cores an executor can use.'""/>
+                    Executor Core Upper Bound
+                  </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
                       <input v-model="config.executorCoreUpperBound" class="form-control form-control-sm" type="number" min=0>
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">OS Reserved Cores</label>
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                    <font-awesome-icon icon="question-circle" v-b-popover.hover="'The number of cores that will be reserved for the OS for each node.'""/>
+                    OS Reserved Cores
+                  </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
                       <input v-model="config.osReservedCores" class="form-control form-control-sm" type="number" min=0>
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">OS Reserved Memory (GB)</label>
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                    <font-awesome-icon icon="question-circle" v-b-popover.hover="'The memory amount that will be reserved for the OS for each node.'""/>
+                    OS Reserved Memory (GB)
+                  </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
                       <input v-model="config.osReservedMemoryGB" class="form-control form-control-sm" type="number" min=0>
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Parallelism Per Core</label>
+                  <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
+                    <font-awesome-icon icon="question-circle" v-b-popover.hover="'The level of parallelism per allocated core.'""/>
+                    Parallelism Per Core
+                  </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
                       <input v-model="config.parallelismPerCore" class="form-control form-control-sm" type="number" min=0>
                   </div>
