@@ -3,7 +3,7 @@
         <div>
         <h1>Spark job configurator</h1>
         <p>
-          Find the best configuration to deploy your Spark applications in YARN in cluster-mode.
+          Find the best configuration to deploy your Spark applications in YARN in cluster-mode by optimizing your cluster resources.
           This project is based on <a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">Anthony Shipman</a>'s article which I give my thanks.
         </p>
         </div>
@@ -87,9 +87,8 @@
           <table class="table table-sm">
             <tbody>
               <tr><td>spark.executor.instances</td><td>{{spark.executorInstances}}</td></tr>
-              <tr><td>spark.yarn.executor.memoryOverhead </td><td>{{spark.yarnExecutorMemoryOverhead}}</td></tr>
               <tr><td>spark.executor.memory</td><td>{{spark.executorMemory}}</td></tr>
-              <tr><td>spark.yarn.driver.memoryOverhead </td><td>{{spark.yarnDriverMemoryOverhead}}</td></tr>
+              <tr><td>spark.yarn.am.memoryOverhead </td><td>{{spark.memoryOverhead}}</td></tr>
               <tr><td>spark.driver.memory</td><td>{{spark.driverMemory}}</td></tr>
               <tr><td>spark.executor.cores</td><td>{{spark.executorCores}}</td></tr>
               <tr><td>spark.driver.cores</td><td>{{spark.driverCores}}</td></tr>
@@ -103,9 +102,8 @@
 spark-submit \
     --&lt;your class&gt; \
     --spark.executor.instances {{spark.executorInstances}} \
-    --spark.yarn.executor.memoryOverhead {{spark.yarnExecutorMemoryOverhead}} \
     --spark.executor.memory {{spark.executorMemory}} \
-    --spark.yarn.driver.memoryOverhead {{spark.yarnDriverMemoryOverhead}} \
+    --spark.yarn.am.memoryOverhead {{spark.memoryOverhead}} \
     --spark.driver.memory {{spark.driverMemory}} \
     --spark.executor.cores {{spark.executorCores}} \
     --spark.driver.cores {{spark.driverCores}} \
@@ -117,7 +115,7 @@ spark-submit \
       <div>
         <h5>External references</h5>
         <ul>
-            <li><a target="_blank" href="https://spark.apache.org/docs/latest/running-on-yarn.html">https://spark.apache.org/docs/latest/running-on-yarn.html</a></li>
+            <li><a target="_blank" href="https://spark.apache.org/docs/2.4.0/running-on-yarn.html">https://spark.apache.org/docs/2.4.0/running-on-yarn.html</a></li>
             <li><a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet</a></li>
         </ul>
       </div>
@@ -169,15 +167,14 @@ export default {
       var executorInstances = nodes * this.config.executorsPerNode - 1
 
       var totalMemoryPerExecutor = Math.floor(availableMemory / this.config.executorsPerNode)
-      var overheadMemoryPerExecutor = Math.ceil(totalMemoryPerExecutor * this.config.memoryOverheadCoefficient)
-      var memoryPerExecutor = totalMemoryPerExecutor - overheadMemoryPerExecutor
+      var memoryOverheadPerExecutor = Math.ceil(totalMemoryPerExecutor * this.config.memoryOverheadCoefficient)
+      var memoryPerExecutor = totalMemoryPerExecutor - memoryOverheadPerExecutor
       var coresPerExecutor = Math.floor(availableCores / this.config.executorsPerNode)
       // var unusedMemoryPerNode = availableMemory - totalMemoryPerExecutor * this.config.executorsPerNode
       // var unusedCoresPerNode = availableCores - coresPerExecutor * this.config.executorsPerNode
 
-      var yarnExecutorMemoryOverhead = overheadMemoryPerExecutor * 1024
+      var memoryOverhead = memoryOverheadPerExecutor * 1024
       var executorMemory = memoryPerExecutor
-      var yarnDriverMemoryOverhead = yarnExecutorMemoryOverhead
       var driverMemory = executorMemory
       var executorCores = coresPerExecutor
       var driverCores = executorCores
@@ -185,9 +182,8 @@ export default {
 
       return {
         executorInstances: executorInstances,
-        yarnExecutorMemoryOverhead: yarnExecutorMemoryOverhead + 'G',
+        memoryOverhead: memoryOverhead + 'G',
         executorMemory: executorMemory,
-        yarnDriverMemoryOverhead: yarnDriverMemoryOverhead + 'G',
         driverMemory: driverMemory,
         executorCores: executorCores,
         driverCores: driverCores,
