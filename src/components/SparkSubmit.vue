@@ -18,13 +18,29 @@
 </style>
 <template>
     <div class="container">
-        <div>
-        <h1>Spark job configurator  <span>{{$v.$anyError}}</span></h1>
-        <p>
+        <div class="pb-2 mt-4 mb-2 border-bottom">
+          <h1>Spark job configurator</h1>
+        </div>
+        <social-sharing
+          url="https://hizumisen.gitlab.io/spark-submit/"
+          title="spark-submit: a Spark job configurator"
+          description="Find the best configuration to deploy your Spark applications in YARN in cluster-mode by optimizing your cluster resources."
+          hashtags="spark"
+          twitter-user="hizumisen"
+          inline-template>
+          <div>
+              <network network="twitter" class="m-1"><button class="btn btn-outline-secondary" type="button"><font-awesome-icon :icon="['fab','twitter']" size="lg"/></button></network>
+              <network network="facebook" class="m-1"><button class="btn btn-outline-secondary" type="button"><font-awesome-icon :icon="['fab','facebook']" size="lg"/></button></network>
+              <network network="linkedin" class="m-1"><button class="btn btn-outline-secondary" type="button"><font-awesome-icon :icon="['fab','linkedin']" size="lg"/></button></network>
+              <network network="reddit" class="m-1"><button class="btn btn-outline-secondary" type="button"><font-awesome-icon :icon="['fab','reddit']" size="lg"/></button></network>
+              <network network="line" class="m-1"><button class="btn btn-outline-secondary" type="button"><font-awesome-icon :icon="['fab','line']" size="lg"/></button></network>
+              <network network="telegram" class="m-1"><button class="btn btn-outline-secondary" type="button"><font-awesome-icon :icon="['fab','telegram']" size="lg"/></button></network>
+          </div>
+        </social-sharing>
+        <p class="mt-4">
           Find the best configuration to deploy your Spark applications in YARN in cluster-mode by optimizing your cluster resources.
           This project is based on <a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">Anthony Shipman</a>'s article which I give my thanks.
         </p>
-        </div>
         <div class="row">
           <form class="col-sm">
               <h5>Cluster</h5>
@@ -148,8 +164,7 @@
             </b-card>
           </b-collapse>
         </div>
-        <hr/>
-        <div class="row">
+        <div class="row pb-2 pt-2 mt-4 mb-2 border-top">
         <div class="col-sm">
           <h5>Spark configuration </h5>
           <table class="table table-sm">

@@ -10,6 +10,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-common-types": "^0.2.12",
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
+    "@fortawesome/free-brands-svg-icons": "^5.7.1",
     "@fortawesome/free-solid-svg-icons": "^5.6.3",
     "@fortawesome/vue-fontawesome": "^0.1.5",
     "bootstrap-vue": "^2.0.0-rc.11",
@@ -17,6 +18,7 @@
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vue-select": "^2.5.1",
+    "vue-social-sharing": "^2.3.3",
     "vuelidate": "^0.7.4",
     "vuex": "^3.0.1"
   },
