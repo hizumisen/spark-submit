@@ -1,7 +1,25 @@
+<style type="text/css">
+    /*prevent bootstrap-vue css conflict*/
+    .v-select.dropdown .dropdown-toggle::after {
+        content: none;
+    }
+    .v-select.dropdown .form-control {
+        height: inherit;
+    }
+    .v-select .dropdown-toggle .clear {
+        visibility: hidden;
+    }
+    .v-select.form-control-sm {
+        padding: 0;
+    }
+    .nav {
+      margin-bottom: 1rem;
+    }
+</style>
 <template>
     <div class="container">
         <div>
-        <h1>Spark job configurator</h1>
+        <h1>Spark job configurator  <span>{{$v.$anyError}}</span></h1>
         <p>
           Find the best configuration to deploy your Spark applications in YARN in cluster-mode by optimizing your cluster resources.
           This project is based on <a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">Anthony Shipman</a>'s article which I give my thanks.
@@ -10,7 +28,42 @@
         <div class="row">
           <form class="col-sm">
               <h5>Cluster</h5>
-              <v-cluster v-model="cluster"/>
+              <b-tabs v-model="cluster.tabIndex">
+                <b-tab title="Custom">
+                    <div class="form-group row">
+                        <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Number of Nodes</label>
+                           <div class="col-xs-12 col-sm-12 col-lg-5">
+                               <b-form-input v-model="cluster.nodes" class="form-control form-control-sm" type="number" :state="!$v.cluster.nodes.$invalid"></b-form-input>
+                            </div>
+                       </div>
+                       <div class="form-group row">
+                        <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Memory Per Node (GB)</label>
+                           <div class="col-xs-12 col-sm-12 col-lg-5">
+                               <b-form-input v-model="cluster.nodeMemory" class="form-control form-control-sm" type="number" :state="!$v.cluster.nodeMemory.$invalid"></b-form-input>
+                            </div>
+                       </div>
+                       <div class="form-group row">
+                        <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Cores Per Node</label>
+                           <div class="col-xs-12 col-sm-12 col-lg-5">
+                               <b-form-input v-model="cluster.nodeCores" class="form-control form-control-sm" type="number" :state="!$v.cluster.nodeCores.$invalid"></b-form-input>
+                            </div>
+                       </div>
+                </b-tab>
+                <b-tab title="AWS EMR" >
+                    <div class="form-group row">
+                      <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Number of Nodes</label>
+                      <div class="col-xs-12 col-sm-12 col-lg-5">
+                        <b-form-input v-model="cluster.nodes" class="form-control form-control-sm" type="number" :state="!$v.cluster.nodes.$invalid"></b-form-input>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Instance type</label>
+                         <div class="col-xs-12 col-sm-12 col-lg-5">
+                             <v-select class="form-control-sm" v-model="cluster.ec2" :options="Object.keys($store.state.emr)" ></v-select>
+                          </div>
+                     </div>
+                </b-tab>
+            </b-tabs>
               <h5>Executors</h5>
               <div class="form-group row">
                 <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
@@ -18,7 +71,7 @@
                   Executors Per Node
                 </label>
                 <div class="col-xs-12 col-sm-12 col-lg-5">
-                  <input v-model="config.executorsPerNode" class="form-control form-control-sm" type="number" min = 1 step = 1>
+                  <b-form-input v-model.number="config.executorsPerNode" class="form-control form-control-sm" type="number" :state="!$v.config.executorsPerNode.$invalid"></b-form-input>
                 </div>
               </div>
           </form>
@@ -30,16 +83,16 @@
                     Memory Overhead Coefficient
                   </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.memoryOverheadCoefficient" class="form-control form-control-sm" type="number" min=0 max=1 step=0.01>
+                      <b-form-input v-model.number="config.memoryOverheadCoefficient" class="form-control form-control-sm" type="number" :state="!$v.config.memoryOverheadCoefficient.$invalid"></b-form-input>
                   </div>
               </div>
               <div class="form-group row">
                   <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
                     <font-awesome-icon icon="question-circle" v-b-popover.hover="'The maximum amount of memory an executor can use.'""/>
-                    Executor Memory Upper Bound (GB)
+                    Executor Memory Upper Bound (MB)
                   </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.executorMemoryUpperBoundGB" class="form-control form-control-sm" type="number" min=0>
+                      <b-form-input v-model.number="config.executorMemoryUpperBoundMB" class="form-control form-control-sm" type="number" :state="!$v.config.executorMemoryUpperBoundMB.$invalid"></b-form-input>
                   </div>
               </div>
               <div class="form-group row">
@@ -48,7 +101,7 @@
                     Executor Core Upper Bound
                   </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.executorCoreUpperBound" class="form-control form-control-sm" type="number" min=0>
+                      <b-form-input v-model.number="config.executorCoreUpperBound" class="form-control form-control-sm" type="number" :state="!$v.config.executorCoreUpperBound.$invalid"></b-form-input>
                   </div>
               </div>
               <div class="form-group row">
@@ -57,16 +110,16 @@
                     OS Reserved Cores
                   </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.osReservedCores" class="form-control form-control-sm" type="number" min=0>
+                      <b-form-input v-model.number="config.osReservedCores" class="form-control form-control-sm" type="number" :state="!$v.config.osReservedCores.$invalid"></b-form-input>
                   </div>
               </div>
               <div class="form-group row">
                   <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">
                     <font-awesome-icon icon="question-circle" v-b-popover.hover="'The memory amount that will be reserved for the OS for each node.'""/>
-                    OS Reserved Memory (GB)
+                    OS Reserved Memory (MB)
                   </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.osReservedMemoryGB" class="form-control form-control-sm" type="number" min=0>
+                      <b-form-input v-model.number="config.osReservedMemoryMB" class="form-control form-control-sm" type="number" :state="!$v.config.osReservedMemoryMB.$invalid"></b-form-input>
                   </div>
               </div>
               <div class="form-group row">
@@ -75,10 +128,25 @@
                     Parallelism Per Core
                   </label>
                   <div class="col-xs-12 col-sm-12 col-lg-5">
-                      <input v-model="config.parallelismPerCore" class="form-control form-control-sm" type="number" min=0>
+                      <b-form-input v-model.number="config.parallelismPerCore" class="form-control form-control-sm" type="number" :state="!$v.config.parallelismPerCore.$invalid"></b-form-input>
                   </div>
               </div>
           </form>
+        </div>
+        <div>
+          <b-btn v-b-toggle.collapse1 variant="danger" v-if="spark.errors.length">
+            Errors <span class="badge badge-light">{{spark.errors.length}}</span>
+          </b-btn>
+          <b-btn v-b-toggle.collapse1 variant="success" v-else>
+            No errors
+          </b-btn>
+          <b-collapse id="collapse1" class="mt-2" v-if="spark.errors.length">
+            <b-card no-body bg-variant="danger">
+              <ul class="list-group list-group-flush">
+                <li v-for="error in spark.errors" class="list-group-item list-group-item-danger">{{ error }}</li>
+              </ul>
+            </b-card>
+          </b-collapse>
         </div>
         <hr/>
         <div class="row">
@@ -123,8 +191,10 @@ spark-submit \
 </template>
 
 <script>
-export default {
+import { validationMixin } from "vuelidate"
+import { integer, numeric, decimal, minValue, maxValue } from 'vuelidate/lib/validators'
 
+export default {
   data () {
     return {
       cluster: {
@@ -137,57 +207,113 @@ export default {
       config: {
         executorsPerNode: 5,
         memoryOverheadCoefficient: 0.1,
-        executorMemoryUpperBoundGB: 64,
+        executorMemoryUpperBoundMB: 64*1024,
         executorCoreUpperBound: 5,
-        osReservedMemoryGB: 1,
+        osReservedMemoryMB: 1024,
         osReservedCores: 1,
         parallelismPerCore: 2
       }
     }
   },
+  mixins: [
+    validationMixin
+  ],
+  validations: {
+    cluster: {
+      nodes : { integer, minValue:minValue(1) },
+      nodeMemory : { integer, minValue:minValue(1) },
+      nodeCores : { integer, minValue:minValue(1) },
+    },
+    config: {
+      executorsPerNode: { integer, minValue:minValue(1) },
+      memoryOverheadCoefficient: { decimal, minValue:minValue(0), maxValue:maxValue(1) },
+      executorMemoryUpperBoundMB: { integer, minValue:minValue(0) },
+      executorCoreUpperBound: { integer, minValue:minValue(0) },
+      osReservedMemoryMB: { integer, minValue:minValue(0) },
+      osReservedCores: { integer, minValue:minValue(0) },
+      parallelismPerCore: { integer, minValue:minValue(1) }
+    }
+  },
+  methods: {
+    status(validation) {
+      return {
+        success: validation.$error,
+        danger: validation.$dirty
+      }
+    }
+  },
   computed: {
     spark () {
-      var nodes = null
-      var nodeMemoryGB = null
-      var nodeCores = null
-
-      if (this.cluster.tabIndex === 0) {
-        nodes = this.cluster.nodes
-        nodeMemoryGB = this.cluster.nodeMemory
-        nodeCores = this.cluster.nodeCores
-      } else {
-        nodes = this.cluster.nodes
-        nodeMemoryGB = this.$store.state.emr[this.cluster.ec2]['yarn.nodemanager.resource.memory-mb']['default'] / 1024
-        nodeCores = this.$store.state.ec2[this.cluster.ec2]['cpu']
+      function getClusterConfig(cluster, store) {
+        if (cluster.tabIndex === 0) {
+          return {
+            nodes: cluster.nodes,
+            nodeMemoryMB: cluster.nodeMemory * 1024,
+            nodeCores: cluster.nodeCores
+          }
+        } else {
+          return {
+            nodes: cluster.nodes,
+            nodeMemoryMB: store.state.emr[cluster.ec2]['yarn.nodemanager.resource.memory-mb']['default'],
+            nodeCores: store.state.ec2[cluster.ec2]['cpu']
+          }
+        }
       }
-      console.log('nodes=' + nodes + ' nodeMemoryGB=' + nodeMemoryGB + ' nodeCores=' + nodeCores)
+      
+      var errors = []
+      if(this.$v.$invalid) {
+        errors.push('Invalid configuration')
+        return {
+          errors: errors,
+          executorInstances: 0,
+          memoryOverhead: '0m',
+          executorMemory: '0m',
+          driverMemory: '0m',
+          executorCores: 0,
+          driverCores: 0,
+          defaultParallelism: 0
+        }
+      }else{
+        const cluter = getClusterConfig(this.cluster, this.$store)
+        const availableMemoryMB = cluter.nodeMemoryMB - this.config.osReservedMemoryMB
+        const availableCores = cluter.nodeCores - this.config.osReservedCores
+        const executorInstances = cluter.nodes * this.config.executorsPerNode - 1
 
-      var availableMemory = nodeMemoryGB - this.config.osReservedMemoryGB
-      var availableCores = nodeCores - this.config.osReservedCores
-      var executorInstances = nodes * this.config.executorsPerNode - 1
+        if (availableMemoryMB <= 0)
+          errors.push('The memory reserved for the OS (' + this.config.osReservedMemoryMB + ') is greater than the one available (' + cluter.nodeMemoryMB + ').')
+        if (availableCores <= 0)
+          errors.push('The cores reserved for the OS (' + this.config.osReservedCores + ' core) is greater than the one availables (' + cluter.nodeCores + ' cores).')
+        
+        const totalMemoryPerExecutor = Math.floor(availableMemoryMB / this.config.executorsPerNode)
+        if (totalMemoryPerExecutor <= 0)
+          errors.push('A lot of executors configured (' + this.config.executorsPerNode + ' executors) for the memory available per node (' + availableMemoryMB + 'MB).')
+        const memoryOverheadPerExecutor = Math.ceil(totalMemoryPerExecutor * this.config.memoryOverheadCoefficient)
+        const memoryPerExecutor = totalMemoryPerExecutor - memoryOverheadPerExecutor
+        if (memoryPerExecutor <= 0)
+          errors.push('The memory reserved for each executor (' + totalMemoryPerExecutor + 'MB) is greater than the one available (' + memoryOverheadPerExecutor + 'MB are reserved for overhead).')
+        const coresPerExecutor = Math.floor(availableCores / this.config.executorsPerNode)
+        if (coresPerExecutor <= 0)
+          errors.push('A lot of executors configured (' + this.config.executorsPerNode + ' executors) for the cores available per node (' + availableCores + ' cores).')
+        // const unusedMemoryPerNode = availableMemory - totalMemoryPerExecutor * this.config.executorsPerNode
+        // const unusedCoresPerNode = availableCores - coresPerExecutor * this.config.executorsPerNode
 
-      var totalMemoryPerExecutor = Math.floor(availableMemory / this.config.executorsPerNode)
-      var memoryOverheadPerExecutor = Math.ceil(totalMemoryPerExecutor * this.config.memoryOverheadCoefficient)
-      var memoryPerExecutor = totalMemoryPerExecutor - memoryOverheadPerExecutor
-      var coresPerExecutor = Math.floor(availableCores / this.config.executorsPerNode)
-      // var unusedMemoryPerNode = availableMemory - totalMemoryPerExecutor * this.config.executorsPerNode
-      // var unusedCoresPerNode = availableCores - coresPerExecutor * this.config.executorsPerNode
+        const memoryOverhead = memoryOverheadPerExecutor
+        const executorMemory = memoryPerExecutor
+        const driverMemory = executorMemory
+        const executorCores = coresPerExecutor
+        const driverCores = executorCores
+        const defaultParallelism = executorInstances * executorCores * this.config.parallelismPerCore
 
-      var memoryOverhead = memoryOverheadPerExecutor * 1024
-      var executorMemory = memoryPerExecutor
-      var driverMemory = executorMemory
-      var executorCores = coresPerExecutor
-      var driverCores = executorCores
-      var defaultParallelism = executorInstances * executorCores * this.config.parallelismPerCore
-
-      return {
-        executorInstances: executorInstances,
-        memoryOverhead: memoryOverhead + 'G',
-        executorMemory: executorMemory,
-        driverMemory: driverMemory,
-        executorCores: executorCores,
-        driverCores: driverCores,
-        defaultParallelism: defaultParallelism
+        return {
+          errors: errors,
+          executorInstances: executorInstances,
+          memoryOverhead: memoryOverhead + 'm',
+          executorMemory: executorMemory + 'm',
+          driverMemory: driverMemory + 'm',
+          executorCores: executorCores,
+          driverCores: driverCores,
+          defaultParallelism: defaultParallelism
+        }
       }
     }
   }
