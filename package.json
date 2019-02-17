@@ -16,6 +16,7 @@
     "bootstrap-vue": "^2.0.0-rc.11",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",
+    "vue-clipboard2": "^0.3.0",
     "vue-router": "^3.0.1",
     "vue-select": "^2.5.1",
     "vue-social-sharing": "^2.3.3",
