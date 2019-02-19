@@ -70,7 +70,7 @@
                             </div>
                        </div>
                        <div class="form-group row">
-                        <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Memory Per Node (GB)</label>
+                        <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Memory Per Node (MB)</label>
                            <div class="col-xs-12 col-sm-12 col-lg-5">
                                <b-form-input v-model="cluster.nodeMemory" class="form-control form-control-sm" type="number" :state="!$v.cluster.nodeMemory.$invalid && null"></b-form-input>
                             </div>
@@ -202,7 +202,7 @@
         </table>
         <h6>Spark submit command</h6>
         <div>
-          <p class="text-light bg-dark p-2 rounded"><code>{{spark.sparkSubmitCommand}}</code></p>
+          <p class="text-light bg-dark p-2 w-100 rounded"><code>{{spark.sparkSubmitCommand}}</code></p>
           <b-button variant="outline-primary" v-on:click="copyCommandToClipboard">
             <font-awesome-icon icon="copy"/>
           </b-button>
@@ -216,6 +216,33 @@
             <li><a target="_blank" href="http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet">http://c2fo.io/c2fo/spark/aws/emr/2016/07/06/apache-spark-config-cheatsheet</a></li>
         </ul>
       </div>
+      <vue-cookie-accept-decline
+          :ref="'myPanel1'"
+          :elementId="'myPanel1'"
+          :debug="false"
+          :position="'bottom-left'"
+          :type="'floating'"
+          :disableDecline="false"
+          :transitionName="'slideFromBottom'"
+          :showPostponeButton="true"
+          @status="cookieStatus"
+          @clicked-accept="cookieClickedAccept"
+          @clicked-decline="cookieClickedDecline"
+          @clicked-postpone="cookieClickedPostpone"
+          @removed-cookie="cookieRemovedCookie">
+          <div slot="postponeContent">
+              &times;
+          </div>
+          <div slot="message">
+              We use cookies to ensure you get the best experience on our website. <a href="https://cookiesandyou.com/" target="_blank">Learn More...</a>
+          </div>
+          <div slot="declineContent">
+              OPT OUT
+          </div>
+          <div slot="acceptContent">
+              GOT IT!
+          </div>
+        </vue-cookie-accept-decline>
     </div>
 </template>
 
@@ -229,7 +256,7 @@ export default {
       cluster: {
         tabIndex: 0,
         nodes: 30,
-        nodeMemory: 60,
+        nodeMemory: 60000,
         nodeCores: 8,
         ec2: 'r3.xlarge'
       },
@@ -242,7 +269,8 @@ export default {
         osReservedCores: 1,
         parallelismPerCore: 2
       },
-      clipboardMsgShow: false
+      clipboardMsgShow: false,
+      status: null
     }
   },
   mixins: [
@@ -265,6 +293,25 @@ export default {
     }
   },
   methods: {
+    cookieStatus (status) {
+        this.status = status
+    },
+    cookieClickedAccept () {
+        this.status = 'accept'
+    },
+    cookieClickedDecline () {
+        this.status = 'decline'
+    },
+    cookieClickedPostpone () {
+        this.status = 'postpone'
+    },
+    cookieRemovedCookie () {
+        this.status = null
+        this.$refs.myPanel1.init()
+    },
+    removeCookie () {
+        this.$refs.myPanel1.removeCookie()
+    },
     copyCommandToClipboard: function (event) {
       const context = this
       this.$copyText(this.spark.sparkSubmitCommand).then(function (e) {
@@ -289,7 +336,7 @@ export default {
         if (cluster.tabIndex === 0) {
           return {
             nodes: cluster.nodes,
-            nodeMemoryMB: cluster.nodeMemory * 1024,
+            nodeMemoryMB: cluster.nodeMemory,
             nodeCores: cluster.nodeCores
           }
         } else {
@@ -301,7 +348,7 @@ export default {
         }
       }
       function getSparkSubmitCommand(configurations) {
-        const sparkSubmitCommandConfigurations = Array.from(Object.entries(configurations), ([key, value]) => key + ' ' + value).join(' ')
+        const sparkSubmitCommandConfigurations = Array.from(Object.entries(configurations), ([key, value]) => '--conf ' + key + ' ' + value).join(' ')
         return 'spark-submit --class <your-class> ' + sparkSubmitCommandConfigurations + ' <your-jar>'
       }
       
@@ -362,10 +409,6 @@ export default {
             'spark.driver.cores': driverCores,
             'spark.default.parallelism': defaultParallelism
         }
-
-        const sparkSubmitCommandConfigurations = Array.from(Object.entries(configurations), ([key, value]) => key + ' ' + value).join(' ')
-        const sparkSubmitCommand = 'spark-submit --class <your-class> ' + sparkSubmitCommandConfigurations + ' <your-jar>'
-
         return {
           errors: errors,
           configurations: configurations,

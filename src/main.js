@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Vuelidate from 'vuelidate'
 import SocialSharing from 'vue-social-sharing'
 import VueClipboard from 'vue-clipboard2'
+import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
+import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
 
 library.add(faQuestionCircle, faCopy, faFacebook, faLine, faLinkedin, faReddit, faTelegram, faTwitter)
 
@@ -22,6 +24,7 @@ Vue.use(SocialSharing);
 Vue.use(VueClipboard)
 Vue.component('v-select', vSelect)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('vue-cookie-accept-decline', VueCookieAcceptDecline)
 
 Vue.config.productionTip = false
 
