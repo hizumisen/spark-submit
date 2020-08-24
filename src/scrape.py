@@ -75,4 +75,4 @@ emr = dict(list(emr_it))
 state = merge_dictionaries(ec2,emr)
 
 with open('state.json', 'w') as f:
-    json.dump(state, f)
+    json.dump(state, f, indent = 2)
