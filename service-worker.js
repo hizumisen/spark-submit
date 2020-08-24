@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/spark-submit/precache-manifest.3bbd405f79801da236da94975486b1f2.js"
+  "/spark-submit/precache-manifest.11ae24b8be73ef7c53733d94fbb6eaf6.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "spark-submit"});

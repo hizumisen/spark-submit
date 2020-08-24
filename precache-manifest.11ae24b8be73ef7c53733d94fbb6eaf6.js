@@ -1,14 +1,14 @@
 self.__precacheManifest = [
   {
-    "revision": "6549909fdb4799657224",
+    "revision": "06e8b31247c2bf5e2794",
     "url": "/spark-submit/css/app.3ed50f43.css"
   },
   {
-    "revision": "6549909fdb4799657224",
-    "url": "/spark-submit/js/app.180eb2d4.js"
+    "revision": "06e8b31247c2bf5e2794",
+    "url": "/spark-submit/js/app.dcad7ace.js"
   },
   {
-    "revision": "4df0ad2614428ba3dba05c77f47ac8aa",
+    "revision": "17fee2c6f577f7920cded8c6638c5e1c",
     "url": "/spark-submit/index.html"
   },
   {
