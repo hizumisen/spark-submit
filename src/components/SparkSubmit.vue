@@ -92,7 +92,7 @@
                     <div class="form-group row">
                       <label class="col-xs-12 col-sm-12 col-lg-7 col-form-label col-form-label-sm">Instance type</label>
                          <div class="col-xs-12 col-sm-12 col-lg-5">
-                             <v-select class="form-control-sm" v-model="cluster.ec2" :options="Object.keys($store.state.emr)" ></v-select>
+                             <v-select class="form-control-sm" v-model="cluster.ec2" :options="Object.keys($store.state).sort()" ></v-select>
                           </div>
                      </div>
                 </b-tab>
@@ -258,7 +258,7 @@ export default {
         nodes: 30,
         nodeMemory: 60000,
         nodeCores: 8,
-        ec2: 'r3.xlarge'
+        ec2: 'r5.2xlarge'
       },
       config: {
         executorsPerNode: 5,
@@ -342,8 +342,8 @@ export default {
         } else {
           return {
             nodes: cluster.nodes,
-            nodeMemoryMB: store.state.emr[cluster.ec2]['yarn.nodemanager.resource.memory-mb']['default'],
-            nodeCores: store.state.ec2[cluster.ec2]['cpu']
+            nodeMemoryMB: store.state[cluster.ec2]['yarn.nodemanager.resource.memory-mb'],
+            nodeCores: store.state[cluster.ec2]['cpu']
           }
         }
       }
